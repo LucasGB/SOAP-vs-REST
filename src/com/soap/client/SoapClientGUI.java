@@ -2,14 +2,14 @@ package com.soap.client;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import com.soap.server.Tasks;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SoapClientGUI extends javax.swing.JFrame {
 
@@ -19,11 +19,11 @@ public class SoapClientGUI extends javax.swing.JFrame {
 
     public SoapClientGUI(int userID) {
         initComponents();
-        
+
         this.setLocationRelativeTo(null);
-        
+
         this.userID = userID;
-        
+
         URL url = null;
         try {
             url = new URL("http://localhost:9876/?wsdl");
@@ -76,8 +76,18 @@ public class SoapClientGUI extends javax.swing.JFrame {
         });
 
         btnAddTask.setText("Adicionar");
+        btnAddTask.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddTaskActionPerformed(evt);
+            }
+        });
 
         btnEditTask.setText("Editar");
+        btnEditTask.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditTaskActionPerformed(evt);
+            }
+        });
 
         btnDeleteTask.setText("Deletar");
 
@@ -133,36 +143,32 @@ public class SoapClientGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoadDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadDataActionPerformed
-/*
-        if (!this.isLoggedIn) {
-            LoginDialog loginDialog = new LoginDialog(new javax.swing.JFrame(), true);
-            List<Object> credentials = loginDialog.showDialog();
-            System.out.println(credentials.get(0));
-            
-
-            if (!loginDialog.getLoginCancelled()) {
-                if (true) {
-                    this.isLoggedIn = true;
-                } else {
-                    JOptionPane.showMessageDialog(this, "Error Logging in, please try again");
-                    return;
-                }
-            } else {
-                return;
-            }
-        }
-
-    System.out.println (eif.getUserCount());
-        */
-
         DefaultTableModel model = new DefaultTableModel(new String[]{"Prioridade", "Tarefa", "Detalhes", "Prazo", "Finalizado"}, 0);
         Object[] entries = eif.getAllEntries(this.userID);
-        for(Object obj : entries){
+
+        for (Object obj : entries) {
             model.addRow((Object[]) obj);
         }
         table.setModel(model);
-
     }//GEN-LAST:event_btnLoadDataActionPerformed
+
+    private void btnAddTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddTaskActionPerformed
+        AddTaskFrame addFrame = new AddTaskFrame(userID);
+    }//GEN-LAST:event_btnAddTaskActionPerformed
+
+    private void btnEditTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditTaskActionPerformed
+        List<String> numdata = new ArrayList<String>();
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        
+        int row = table.getSelectedRow();
+        
+        for (int count = 0; count < model.getColumnCount(); count++) {
+            numdata.add(model.getValueAt(row, count).toString());
+        }
+        System.out.println(numdata);
+        
+        EditTaskFrame editFrame = new EditTaskFrame(Integer.parseInt(numdata.get(0)), numdata.get(1), numdata.get(2), numdata.get(3), Integer.parseInt(numdata.get(4)), userID);
+    }//GEN-LAST:event_btnEditTaskActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddTask;
