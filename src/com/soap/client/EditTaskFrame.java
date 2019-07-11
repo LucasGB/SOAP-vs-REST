@@ -16,22 +16,20 @@ import javax.xml.ws.Service;
 public class EditTaskFrame extends javax.swing.JFrame {
 
     private int userID;
+    private int old_completed;
+    private String old_task;
+    private String old_dueDate;
     private Tasks eif;
 
     public EditTaskFrame(int priority, String task, String details, String dueDate, int completed, int userID) {
         initComponents();
         this.userID = userID;
+        this.old_completed = completed;
+        this.old_task = task;
+        this.old_dueDate = dueDate;
         this.setVisible(true);
 
-        this.setLocationRelativeTo(null);
-        
-        System.out.println(priority);
-        System.out.println(task);
-        System.out.println(dueDate);
-        System.out.println(details);
-        System.out.println(completed);
-        System.out.println(userID);
-        
+        this.setLocationRelativeTo(null);      
         
         taskTextField.setText(task);
         try {
@@ -180,7 +178,7 @@ public class EditTaskFrame extends javax.swing.JFrame {
         String details = detailsTextArea.getText();
         int completed = doneCheckBox.isSelected() ? 1 : 0;
 
-        eif.updateTask(priority, task, details, dueDate, completed, this.userID);
+        eif.updateTask(this.old_completed, this.old_task, this.old_dueDate, priority, task, details, dueDate, completed, this.userID);
         this.dispose();
     }//GEN-LAST:event_okBtnActionPerformed
 

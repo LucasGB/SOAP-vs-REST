@@ -17,7 +17,6 @@ public class TasksImpl implements Tasks {
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String text = df.format(dueDate);
-        System.out.println(text);
         
         String query = "insert into Tasks(priority, task, details, dueDate, done, user) values (" + priority + ", '" + task + "', '" + details + "', '" + text + "', " + done + ", " + user + ")";
 
@@ -30,11 +29,18 @@ public class TasksImpl implements Tasks {
         }
     }
 
-    public void deleteTask(int iduser) {
+    public void deleteTask(int completed, String task, Date dueDate, int userID) {
         MysqlConn c = new MysqlConn();
         Connection conn = c.getConnection();
 
-        String query = "delete from Tasks WHERE idTasks = " + iduser + ";";
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String text = df.format(dueDate);
+        
+        String query = "delete from Tasks WHERE "
+                            + "done = " + completed + " and "
+                            + "task = '" + task + "' and "
+                            + "dueDate = '" + text + "' and "
+                            + "user = " + userID + ";";
 
         try {
             Statement stmt = conn.createStatement();
@@ -45,11 +51,25 @@ public class TasksImpl implements Tasks {
         }
     }
 
-    public void updateTask(int iduser, String name) {
+    public void updateTask(int old_completed, String old_task, String old_dueDate, int priority, String task, String details, Date dueDate, int completed, int userID) {
         MysqlConn c = new MysqlConn();
         Connection conn = c.getConnection();
-
-        String query = "update Tasks SET nome = '" + name + "' WHERE idTasks = " + iduser + ";";
+        
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String text = df.format(dueDate);
+        
+        String query = "update Tasks "
+                        + "SET "
+                            + "priority = " + priority + ", "
+                            + "task = '" + task + "', "
+                            + "details = '" + details + "', "
+                            + "dueDate = '" + text + "', "
+                            + "done = " + completed + " "
+                        + "WHERE "
+                            + "done = " + old_completed + " and "
+                            + "task = '" + old_task + "' and "
+                            + "dueDate = '" + old_dueDate + "' and "
+                            + "user = " + userID + ";";
 
         try {
             Statement stmt = conn.createStatement();

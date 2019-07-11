@@ -8,8 +8,15 @@ import javax.swing.table.DefaultTableModel;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import com.soap.server.Tasks;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import javax.swing.RowFilter;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 public class SoapClientGUI extends javax.swing.JFrame {
 
@@ -90,10 +97,20 @@ public class SoapClientGUI extends javax.swing.JFrame {
         });
 
         btnDeleteTask.setText("Deletar");
+        btnDeleteTask.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteTaskActionPerformed(evt);
+            }
+        });
 
         btnApplyUpdates.setText("Apply Updates");
 
         btnApplyFilter.setText("Aplicar Filtro");
+        btnApplyFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApplyFilterActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -159,16 +176,57 @@ public class SoapClientGUI extends javax.swing.JFrame {
     private void btnEditTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditTaskActionPerformed
         List<String> numdata = new ArrayList<String>();
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        
+
         int row = table.getSelectedRow();
-        
+
         for (int count = 0; count < model.getColumnCount(); count++) {
             numdata.add(model.getValueAt(row, count).toString());
         }
-        System.out.println(numdata);
-        
+
         EditTaskFrame editFrame = new EditTaskFrame(Integer.parseInt(numdata.get(0)), numdata.get(1), numdata.get(2), numdata.get(3), Integer.parseInt(numdata.get(4)), userID);
     }//GEN-LAST:event_btnEditTaskActionPerformed
+
+    private void btnDeleteTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteTaskActionPerformed
+        List<String> numdata = new ArrayList<String>();
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+        int row = table.getSelectedRow();
+
+        for (int count = 0; count < model.getColumnCount(); count++) {
+            numdata.add(model.getValueAt(row, count).toString());
+        }
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        
+        try {
+            date = df.parse(numdata.get(3));
+        } catch (ParseException ex) {
+            Logger.getLogger(SoapClientGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        eif.deleteTask(Integer.parseInt(numdata.get(4)), numdata.get(1), date, this.userID);
+    }//GEN-LAST:event_btnDeleteTaskActionPerformed
+
+    private void btnApplyFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyFilterActionPerformed
+        String filter = textFieldFilter.getText();
+        RowFilter<TableModel, Object> rf = null;
+        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(this.table.getModel());
+
+        if (filter.length() != 0) {
+            table.setRowSorter(sorter);
+
+            try {
+                rf = RowFilter.regexFilter(filter);
+            } catch (java.util.regex.PatternSyntaxException e) {
+                System.out.printf("PatternSyntaxException: %s\n", e);
+                return;
+            }
+
+            sorter.setRowFilter(rf);
+        } else {
+            table.setRowSorter(null);
+        }
+    }//GEN-LAST:event_btnApplyFilterActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddTask;
