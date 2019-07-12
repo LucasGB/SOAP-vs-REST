@@ -40,12 +40,12 @@ public class SoapClientGUI extends javax.swing.JFrame {
 
         QName qname = new QName("http://server.soap.com/", "TasksImplService");
 
-        // Create, in effect, a factory for the service.
+        // Cria um serviço
         Service service = Service.create(url, qname);
-        // Extract the endpoint interface, the service "port".
+        // Extrai o endpoint da interface, the service "port".
 
+        // Extrai o estilo de vinculação RPC e retorna um proxy
         eif = service.getPort(Tasks.class);
-
     }
 
     @SuppressWarnings("unchecked")
@@ -58,7 +58,6 @@ public class SoapClientGUI extends javax.swing.JFrame {
         btnAddTask = new javax.swing.JButton();
         btnEditTask = new javax.swing.JButton();
         btnDeleteTask = new javax.swing.JButton();
-        btnApplyUpdates = new javax.swing.JButton();
         btnApplyFilter = new javax.swing.JButton();
         textFieldFilter = new javax.swing.JTextField();
 
@@ -103,8 +102,6 @@ public class SoapClientGUI extends javax.swing.JFrame {
             }
         });
 
-        btnApplyUpdates.setText("Apply Updates");
-
         btnApplyFilter.setText("Aplicar Filtro");
         btnApplyFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -132,9 +129,7 @@ public class SoapClientGUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnDeleteTask, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnApplyUpdates)
-                            .addComponent(btnApplyFilter, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(btnApplyFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -145,8 +140,7 @@ public class SoapClientGUI extends javax.swing.JFrame {
                     .addComponent(btnLoadData)
                     .addComponent(btnAddTask)
                     .addComponent(btnEditTask)
-                    .addComponent(btnDeleteTask)
-                    .addComponent(btnApplyUpdates))
+                    .addComponent(btnDeleteTask))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textFieldFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -161,11 +155,13 @@ public class SoapClientGUI extends javax.swing.JFrame {
 
     private void btnLoadDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadDataActionPerformed
         DefaultTableModel model = new DefaultTableModel(new String[]{"Prioridade", "Tarefa", "Detalhes", "Prazo", "Finalizado"}, 0);
+        
         Object[] entries = eif.getAllEntries(this.userID);
-
+        
         for (Object obj : entries) {
             model.addRow((Object[]) obj);
         }
+  
         table.setModel(model);
     }//GEN-LAST:event_btnLoadDataActionPerformed
 
@@ -231,7 +227,6 @@ public class SoapClientGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddTask;
     private javax.swing.JButton btnApplyFilter;
-    private javax.swing.JButton btnApplyUpdates;
     private javax.swing.JButton btnDeleteTask;
     private javax.swing.JButton btnEditTask;
     private javax.swing.JButton btnLoadData;

@@ -6,6 +6,7 @@ import javax.jws.WebService;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import javax.jws.WebParam;
 
 @WebService(endpointInterface = "com.soap.server.Tasks")
 
@@ -80,7 +81,7 @@ public class TasksImpl implements Tasks {
         }
     }
 
-    public Object[] getAllEntries(int userID) {
+    public Object[] getAllEntries(@WebParam(name="userID")int userID) {
         MysqlConn c = new MysqlConn();
         Connection conn = c.getConnection();
 
